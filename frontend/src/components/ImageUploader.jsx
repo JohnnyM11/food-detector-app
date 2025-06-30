@@ -13,7 +13,7 @@ function ImageUploader({ onResult }) {
     formData.append("file", file);
 
     // POST an /predict-Endpunkt
-    const res = await fetch("http://127.0.0.1:8000/predict", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
       method: "POST",
       body: formData,
     });
