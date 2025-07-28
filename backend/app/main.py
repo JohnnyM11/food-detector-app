@@ -7,7 +7,7 @@ app = FastAPI()                                     # Erstellen einer FastApi-Ap
 # CORS aktivieren für Frontend-Zugriff (z. B. React auf localhost:5173)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],                            # "*" = alle erlauben; später auf Frontend-URL begrenzen
+    allow_origins=["*"],                            # "*" = alle erlauben; später ggf. auf Frontend-URL begrenzen
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
