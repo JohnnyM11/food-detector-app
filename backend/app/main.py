@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File       # FastApi als Webframework für die API
 from fastapi.middleware.cors import CORSMiddleware  # ermöglicht Cross-Origin-Zugriffe (z.B. von http://localhost:5173)
-from app.yolo_predict import run_inference          # eigene Modell-Logik, später für YOLO-Modell-Anbindung
+from yolo_predict import run_inference          # eigene Modell-Logik, später für YOLO-Modell-Anbindung
 
 app = FastAPI()                                     # Erstellen einer FastApi-App-Instanz
 

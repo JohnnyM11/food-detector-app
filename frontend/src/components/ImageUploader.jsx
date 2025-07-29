@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
 function ImageUploader({ onResult }) {
-  const [image, setImage] = useState(null);   // Vorschau für Anzeige
+  const [image, setImage] = useState(null);       // Vorschau für Anzeige
+  const [loading, setLoading] = useState(false);  // Ladeanzeige
 
   // Bild auswählen und an API senden
   const handleFileChange = async (e) => {
@@ -12,6 +13,7 @@ function ImageUploader({ onResult }) {
     const formData = new FormData();
     formData.append("file", file);
 
+    setLoading(true);   // Start Ladeanzeige
     // POST an /predict-Endpunkt
     const res = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
       method: "POST",
@@ -20,6 +22,7 @@ function ImageUploader({ onResult }) {
 
     const data = await res.json();
     onResult(data);                           // Ergebnis an App zurückgeben
+    setLoading(false);    // Ende Ladeanzeige
   };
 
   return (
