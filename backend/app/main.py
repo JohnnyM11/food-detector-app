@@ -1,6 +1,11 @@
 from fastapi import FastAPI, UploadFile, File       # FastApi als Webframework für die API
 from fastapi.middleware.cors import CORSMiddleware  # ermöglicht Cross-Origin-Zugriffe (z.B. von http://localhost:5173)
-from yolo_predict import run_inference          # eigene Modell-Logik, später für YOLO-Modell-Anbindung
+from yolo_predict import run_inference              # eigene Modell-Logik, später für YOLO-Modell-Anbindung
+
+from fastapi import Request         # für "feedback.json" benötigt
+from datetime import datetime       # für "feedback.json" benötigt
+import json                         # für "feedback.json" benötigt
+import os                           # für "feedback.json" benötigt
 
 app = FastAPI()                                     # Erstellen einer FastApi-App-Instanz
 
@@ -18,3 +23,40 @@ async def predict(file: UploadFile = File(...)):
     image_bytes = await file.read()                 # Bild wird als Byte-Daten eingelesen
     result = run_inference(image_bytes)             # Übergabe ans Modell
     return { "items": result["predictions"] }       # Rückgabe als JSON
+
+@app.get("/labels")
+async def get_labels():
+    # Gibt alle Labels zurück, die das Modell erkennen kann
+    from yolo_predict import model
+    return {"labels": list(model.names.values())}
+
+
+FEEDBACK_FILE = "feedback/feedback.json"
+
+@app.post("/feedback")
+async def receive_feedback(request: Request):
+    data = await request.json()
+
+    # Zeitstempel automatisch hinzufügen
+    feedback_entry = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "original": data.get("original"),
+        "correction": data.get("correction"),
+        "confidence": data.get("confidence"),
+        "image_id": data.get("image_id", None)
+    }
+
+    # Bestehende Datei laden oder neue Liste beginnen
+    if os.path.exists(FEEDBACK_FILE):
+        with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
+            feedback_data = json.load(f)
+    else:
+        feedback_data = []
+
+    feedback_data.append(feedback_entry)
+
+    # Feedbackdaten zurück in Datei speichern
+    with open(FEEDBACK_FILE, "w", encoding="utf-8") as f:
+        json.dump(feedback_data, f, indent=2)
+
+    return {"status": "ok", "entry": feedback_entry}
