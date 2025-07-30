@@ -7,13 +7,13 @@ function ImageUploader({ onResult }) {
   // Bild auswählen und an API senden
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    setImage(URL.createObjectURL(file));      // Vorschau anzeigen
+    setImage(URL.createObjectURL(file));          // Vorschau anzeigen
 
     // Vorbereitung für API-Request
     const formData = new FormData();
     formData.append("file", file);
 
-    setLoading(true);   // Start Ladeanzeige
+    setLoading(true);     // Start Ladeanzeige
     // POST an /predict-Endpunkt
     const res = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
       method: "POST",
