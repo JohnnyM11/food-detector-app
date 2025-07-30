@@ -17,4 +17,4 @@ app.add_middleware(
 async def predict(file: UploadFile = File(...)):
     image_bytes = await file.read()                 # Bild wird als Byte-Daten eingelesen
     result = run_inference(image_bytes)             # Übergabe ans Modell
-    return result                                   # Rückgabe als JSON
+    return { "items": result["predictions"] }       # Rückgabe als JSON
