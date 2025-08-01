@@ -30,33 +30,39 @@ async def get_labels():
     from yolo_predict import model
     return {"labels": list(model.names.values())}
 
-
 FEEDBACK_FILE = "feedback/feedback.json"
 
 @app.post("/feedback")
 async def receive_feedback(request: Request):
-    data = await request.json()
+    try:
+        data = await request.json()
+        print("DEBUG FEEDBACK:", data)
 
-    # Zeitstempel automatisch hinzufügen
-    feedback_entry = {
-        "timestamp": datetime.utcnow().isoformat(),
-        "original": data.get("original"),
-        "correction": data.get("correction"),
-        "confidence": data.get("confidence"),
-        "image_id": data.get("image_id", None)
-    }
+        # Zeitstempel automatisch hinzufügen
+        feedback_entry = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "original": data.get("original"),
+            "correction": data.get("correction"),
+            "confidence": data.get("confidence"),
+            "image_id": data.get("image_id", None)
+        }
 
-    # Bestehende Datei laden oder neue Liste beginnen
-    if os.path.exists(FEEDBACK_FILE):
-        with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
-            feedback_data = json.load(f)
-    else:
-        feedback_data = []
+        # Bestehende Datei laden oder neue Liste beginnen
+        if os.path.exists(FEEDBACK_FILE):
+            with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
+                feedback_data = json.load(f)
+        else:
+            feedback_data = []
 
-    feedback_data.append(feedback_entry)
+        feedback_data.append(feedback_entry)
 
-    # Feedbackdaten zurück in Datei speichern
-    with open(FEEDBACK_FILE, "w", encoding="utf-8") as f:
-        json.dump(feedback_data, f, indent=2)
+        # Feedbackdaten zurück in Datei speichern
+        with open(FEEDBACK_FILE, "w", encoding="utf-8") as f:
+            json.dump(feedback_data, f, indent=2)
 
-    return {"status": "ok", "entry": feedback_entry}
+        return {"status": "ok", "entry": feedback_entry}
+
+    except Exception as e:
+            print("⚠️ Fehler beim Einlesen des Feedback-Requests:", e)
+            return {"status": "error", "message": str(e)}
+    
