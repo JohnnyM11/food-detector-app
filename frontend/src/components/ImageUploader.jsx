@@ -28,7 +28,8 @@ function ImageUploader({ onResult }) {
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleFileChange} />
-      {image && <img src={image} alt="Preview" width="200" />}
+      {loading && <p>Lade Bild hoch und starte Analyse...</p>}
+      {image && <img src={image} alt="Preview" width="400" />}
     </div>
   );
 }
