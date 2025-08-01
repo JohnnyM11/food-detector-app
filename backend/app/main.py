@@ -4,6 +4,7 @@ from yolo_predict import run_inference              # eigene Modell-Logik, spät
 
 from fastapi import Request         # Ganzer Absatz primär für "feedback.json" benötigt
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import json
 import os 
 from pathlib import Path
@@ -41,11 +42,11 @@ async def receive_feedback(request: Request):
 
         # Zeitstempel automatisch hinzufügen
         feedback_entry = {
-            "timestamp": datetime.utcnow().isoformat(),
-            "original": data.get("original"),
-            "correction": data.get("correction"),
-            "confidence": data.get("confidence"),
-            "image_id": data.get("image_id", None)
+            "timestamp": datetime.now(ZoneInfo("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S %Z"),
+            "original": data.get("1. original"),
+            "correction": data.get("2. correction"),
+            "confidence": data.get("3. confidence"),
+            "image_id": data.get("4. image_id", None)
         }
 
         if not os.path.exists(FEEDBACK_FILE):
