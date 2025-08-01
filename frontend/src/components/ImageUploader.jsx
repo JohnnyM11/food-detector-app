@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-function ImageUploader({ onResult }) {
+function ImageUploader({ onResult, setLoading }) {
   const [image, setImage] = useState(null); // Vorschau für Anzeige
-  const [loading, setLoading] = useState(false); // Ladeanzeige
 
   // Bild auswählen und an API senden
   const handleFileChange = async (e) => {
@@ -28,8 +27,7 @@ function ImageUploader({ onResult }) {
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleFileChange} />
-      {loading && <p>Lade Bild hoch und starte Analyse...</p>}
-      {image && <img src={image} alt="Preview" width="400" />}
+      {image && <img src={image} alt="Preview" width="300" />}
     </div>
   );
 }
