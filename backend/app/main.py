@@ -2,10 +2,11 @@ from fastapi import FastAPI, UploadFile, File       # FastApi als Webframework f
 from fastapi.middleware.cors import CORSMiddleware  # ermöglicht Cross-Origin-Zugriffe (z.B. von http://localhost:5173)
 from yolo_predict import run_inference              # eigene Modell-Logik, später für YOLO-Modell-Anbindung
 
-from fastapi import Request         # für "feedback.json" benötigt
-from datetime import datetime       # für "feedback.json" benötigt
-import json                         # für "feedback.json" benötigt
-import os                           # für "feedback.json" benötigt
+from fastapi import Request         # Ganzer Absatz primär für "feedback.json" benötigt
+from datetime import datetime
+import json
+import os 
+from pathlib import Path
 
 app = FastAPI()                                     # Erstellen einer FastApi-App-Instanz
 
@@ -30,7 +31,7 @@ async def get_labels():
     from yolo_predict import model
     return {"labels": list(model.names.values())}
 
-FEEDBACK_FILE = "feedback/feedback.json"
+FEEDBACK_FILE = Path("/home/ec2-user/food-detector-app/backend/feedback/feedback.json")
 
 @app.post("/feedback")
 async def receive_feedback(request: Request):
