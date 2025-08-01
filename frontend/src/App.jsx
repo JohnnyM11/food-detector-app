@@ -14,10 +14,10 @@ function App() {
     const correction = typeof input == "string" ? input : input.correction; // Wenn nur ein Label übergeben wurde, umwandeln in Objekt
 
     const payload = {
-      original: original,
-      correction: correction,
-      confidence: confidence,
-      image_id: image_id,
+      "1. original": original,
+      "2. correction": correction,
+      "3. confidence": confidence,
+      "4. image_id": image_id,
     };
 
     await fetch(`${import.meta.env.VITE_API_URL}/feedback`, {
@@ -34,7 +34,10 @@ function App() {
       <h1>Food Detector</h1>
       <ImageUploader onResult={setResult} /> {/* Bild-Upload */}
       <ResultDisplay items={result?.items} /> {/* Ausgabe der Erkennung */}
-      {result && <FeedbackForm onSubmit={handleFeedback} />} {/* Feedback */}
+      {result?.items?.length > 0 && (
+        <FeedbackForm onSubmit={handleFeedback} />
+      )}{" "}
+      {/* Feedback */}
     </div>
   );
 }
