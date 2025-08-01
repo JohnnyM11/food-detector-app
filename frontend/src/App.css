@@ -40,3 +40,20 @@
 .read-the-docs {
   color: #888;
 }
+
+.loading-dots {
+  display: inline-block;
+  font-size: 32px;
+  letter-spacing: 4px;
+  animation: blink 1.4s infinite steps(4);
+  margin-top: 20px;
+  color: #555;
+  text-align: center;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  25% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 0.2; }
+}
