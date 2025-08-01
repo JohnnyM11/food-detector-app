@@ -32,12 +32,18 @@ function App() {
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>Food Detector</h1>
-      <ImageUploader onResult={setResult} /> {/* Bild-Upload */}
-      <ResultDisplay items={result?.items} /> {/* Ausgabe der Erkennung */}
+      {/* Bild-Upload und Bildnamen mit in result einfügen */}
+      <ImageUploader
+        onResult={(data, fileName) =>
+          setResult({ ...data, image_id: fileName })
+        }
+      />{" "}
+      {/* Ausgabe der Erkennung */}
+      <ResultDisplay items={result?.items} />
+      {/* Feedback */}
       {result?.items?.length > 0 && (
         <FeedbackForm onSubmit={handleFeedback} />
       )}{" "}
-      {/* Feedback */}
     </div>
   );
 }
