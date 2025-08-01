@@ -47,12 +47,13 @@ async def receive_feedback(request: Request):
             "image_id": data.get("image_id", None)
         }
 
-        # Bestehende Datei laden oder neue Liste beginnen
-        if os.path.exists(FEEDBACK_FILE):
-            with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
-                feedback_data = json.load(f)
-        else:
-            feedback_data = []
+        if not os.path.exists(FEEDBACK_FILE):
+            with open(FEEDBACK_FILE, "w", encoding="utf-8") as f:
+                json.dump([], f)
+
+        # Bestehende Datei laden
+        with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
+            feedback_data = json.load(f)
 
         feedback_data.append(feedback_entry)
 
