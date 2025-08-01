@@ -37,13 +37,11 @@ function App() {
         onResult={(data, fileName) =>
           setResult({ ...data, image_id: fileName })
         }
-      />{" "}
+      />
       {/* Ausgabe der Erkennung */}
       <ResultDisplay items={result?.items} />
       {/* Feedback */}
-      {result?.items?.length > 0 && (
-        <FeedbackForm onSubmit={handleFeedback} />
-      )}{" "}
+      {result?.items?.length > 0 && <FeedbackForm onSubmit={handleFeedback} />}
     </div>
   );
 }
