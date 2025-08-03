@@ -13,6 +13,7 @@ function ImageUploader({ onResult, setLoading }) {
     formData.append("file", file);
 
     setLoading(true); // Start Ladeanzeige
+
     // POST an /predict-Endpunkt
     const res = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
       method: "POST",
