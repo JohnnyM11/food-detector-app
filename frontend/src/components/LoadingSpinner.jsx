@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css"; // sicherstellen, dass das CSS eingebunden ist
+import "../App.css"; // sicherstellen, dass das CSS eingebunden ist
 
 function LoadingSpinner() {
   return (
