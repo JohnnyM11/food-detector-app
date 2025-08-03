@@ -22,9 +22,12 @@ if [ "$BRANCH" != "main" ]; then
   read -p "Möchtest du den Branch '$BRANCH' jetzt mit 'main' mergen? (y/n): " MERGE
 
   if [ "$MERGE" == "y" ]; then
+	echo ""
+	read -p "📝 Kommentar für den Merge-Commit: " MERGE_MSG
+	
     echo "🔀 Merge wird durchgeführt..."
     git checkout main
-    git merge "$BRANCH"
+    git merge "$BRANCH" --no-ff -m "$MERGE_MSG"
     git push origin main
     git checkout "$BRANCH"
     echo "✅ Merge abgeschlossen und in main gepusht."
