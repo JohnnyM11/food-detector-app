@@ -85,7 +85,9 @@
   100% { transform: translateY(0); }
 }
 
+/*
 .loading-container {
-  margin-top: 40px;   /* Abstand zur Vorschau */
+  margin-top: 40px;   /* Abstand zur Vorschau 
   min-height: 60px;
 }
+*/
