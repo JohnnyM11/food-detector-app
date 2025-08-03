@@ -53,9 +53,9 @@
 
 .loading-dots span {
   display: block;
-  width: 10px;
-  height: 10px;
-  background-color: #555;
+  width: 20px;
+  height: 20px;
+  background-color: black;
   border-radius: 50%;
   animation: bounce 0.6s infinite ease-in-out;
 }
@@ -75,4 +75,5 @@
 
 .loading-container {
   margin-top: 40px;   /* Abstand zur Vorschau */
+  min-height: 60px;
 }
