@@ -42,7 +42,11 @@ function App() {
         setLoading={setLoading} // Ladeanzeige aktivieren
       />
       {/* Ladeanzeige */}
-      {loading && <LoadingSpinner />}
+      {loading && (
+        <div className="loading-container">
+          <LoadingSpinner />
+        </div>
+      )}
       {/* Ausgabe der Erkennung */}
       <ResultDisplay items={result?.items} />
       {/* Feedback */}
