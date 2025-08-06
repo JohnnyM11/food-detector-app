@@ -36,7 +36,9 @@ function App() {
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>
         Food Detector{" "}
-        <span style={{ fontSize: "0.5em", color: "#666" }}>{VERSION}</span>
+        <span style={{ fontSize: "0.5em", color: "#666" }}>
+          {VERSION} (Modell: YOLOv11n){" "}
+        </span>
       </h1>
 
       {/* Bild-Upload und Bildnamen mit in result einfügen */}
