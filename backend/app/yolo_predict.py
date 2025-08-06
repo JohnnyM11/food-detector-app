@@ -5,7 +5,7 @@ from PIL import Image
 import io
 
 # Vortrainiertes YOLOv8-Modell laden (einmalig)
-model = YOLO("yolov11n.pt")      # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
+model = YOLO("yolov8s.pt")      # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 
 # Funktion ist ein Platzhalter für die spätere YOLO-Erkennung
 def run_inference(image_bytes: bytes) -> dict:
