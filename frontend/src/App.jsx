@@ -48,7 +48,7 @@ function App() {
       <h1>
         Food Detector{" "}
         <span style={{ fontSize: "0.5em", color: "#666" }}>
-          {VERSION} (Modell: modelName){" "}
+          {VERSION} (Modell: {modelName}){" "}
         </span>
       </h1>
 
