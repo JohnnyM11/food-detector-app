@@ -6,9 +6,9 @@ import io
 
 # Vortrainiertes YOLO-Modell laden (einmalig)
 #MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
-MODELL = "yolov8s.pt"
+#MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
-#MODELL = "yolo11n.pt"
+MODELL = "yolo11n.pt"
 #MODELL = "yolo11s.pt"
 #MODELL = "yolo11m.pt"
 model = YOLO(MODELL)
