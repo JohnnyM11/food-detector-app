@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File       # FastApi als Webframework für die API
 from fastapi.middleware.cors import CORSMiddleware  # ermöglicht Cross-Origin-Zugriffe (z.B. von http://localhost:5173)
 from yolo_predict import run_inference              # eigene Modell-Logik, später für YOLO-Modell-Anbindung
+from yolo_predict import get_model_name             # Modellname von yolo_predict.py holen
 
 from fastapi import Request         # Ganzer Absatz primär für "feedback.json" benötigt
 from datetime import datetime
@@ -32,6 +33,10 @@ async def get_labels():
     from yolo_predict import model
     return {"labels": list(model.names.values())}
 
+@app.get("/model-info")                             # API-Endpunkt für Modellinfo
+async def get_model_info():
+    return {"model": get_model_name()}
+
 FEEDBACK_FILE = Path("/home/ec2-user/food-detector-app/backend/feedback/feedback.json")
 
 @app.post("/feedback")
@@ -42,7 +47,7 @@ async def receive_feedback(request: Request):
 
         # Zeitstempel automatisch hinzufügen
         feedback_entry = {
-            "timestamp": datetime.now(ZoneInfo("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S %Z"),
+            "timestamp": datetime.now(ZoneInfo("Europe/Berlin")).strftime("%Y-%m-%d %H:%M:%S %z"),
             "original": data.get("1. original"),
             "correction": data.get("2. correction"),
             "confidence": data.get("3. confidence"),
