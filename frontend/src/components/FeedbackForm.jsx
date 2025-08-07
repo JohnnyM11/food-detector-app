@@ -18,8 +18,6 @@ function FeedbackForm({ onSubmit }) {
       uniqueSortedLabels.push("keins davon"); // extra Option ganz unten
 
       setLabelOptions(uniqueSortedLabels); // Liste im State speichern
-
-      setLabelOptions(data.labels);
     };
 
     fetchLabels(); // sofort ausführen

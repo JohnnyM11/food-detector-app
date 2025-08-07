@@ -8,9 +8,9 @@ import io
 #MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 #MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
-MODELL = "yolo11n.pt"
+#MODELL = "yolo11n.pt"
 #MODELL = "yolo11s.pt"
-#MODELL = "yolo11m.pt"
+MODELL = "yolo11m.pt"
 model = YOLO(MODELL)
 
 # Funktion ist ein Platzhalter für die spätere YOLO-Erkennung
