@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react"; // useEffect lädt Daten einmal beim Laden der Komponente
 
-// Liste der Labels (später evtl. per API vom Backend laden)
-//const LABELS = ["Apfel", "Banane", "Birne", "Orange", "Tomate", "Brokkoli", "Keines davon"];
-
 function FeedbackForm({ onSubmit }) {
   const [showInput, setShowInput] = useState(false); // Dropdown anzeigen? Wird true bei Daumen runter
   const [selectedLabel, setSelectedLabel] = useState(""); // User-Korrektur (z.B. Apfel statt Banane) übers Dropdown
@@ -14,7 +11,13 @@ function FeedbackForm({ onSubmit }) {
     const fetchLabels = async () => {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/labels`); // fetch() holt JSON-Daten von der API (/labels)
       const data = await res.json();
-      setLabelOptions(data.labels); // Liste im State speichern
+
+      const uniqueSortedLabels = Array.from(new Set(data.labels)) // Duplikate entfernen
+        .sort((a, b) => a.localeCompare(b, "de")); // alphabetisch sortieren (deutsch)
+
+      uniqueSortedLabels.push("keins davon"); // extra Option ganz unten
+
+      setLabelOptions(uniqueSortedLabels); // Liste im State speichern
     };
 
     fetchLabels(); // sofort ausführen

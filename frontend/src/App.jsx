@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ImageUploader from "./components/ImageUploader";
 import ResultDisplay from "./components/ResultDisplay";
 import FeedbackForm from "./components/FeedbackForm";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
-  const [result, setResult] = useState({ items: [], image_id: "" }); // speichert API-Ergebnis
-  const [loading, setLoading] = useState(false); // Ladeanzeige
+  const [result, setResult] = useState({ items: [], image_id: "" }); // speichert API-Ergebnis im State
+  const [loading, setLoading] = useState(false); // Ladeanzeige im State
+  const [modelName, setModelName] = useState(""); // Modellname im State
+  const VERSION = "V1.0"; // Versionierung
+
+  // Modellname vom Backend holen
+  useEffect(() => {
+    const fetchModelInfo = async () => {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/model-info`);
+      const data = await res.json();
+      setModelName(data.model);
+    };
+    fetchModelInfo();
+  }, []);
 
   const handleFeedback = async (input) => {
     const original = result?.items?.[0]?.label || "unbekannt";
@@ -33,7 +45,13 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>Food Detector</h1>
+      <h1>
+        Food Detector{" "}
+        <span style={{ fontSize: "0.5em", color: "#666" }}>
+          {VERSION} (Modell: {modelName}){" "}
+        </span>
+      </h1>
+
       {/* Bild-Upload und Bildnamen mit in result einfügen */}
       <ImageUploader
         onResult={(data, fileName) =>
@@ -41,14 +59,17 @@ function App() {
         }
         setLoading={setLoading} // Ladeanzeige aktivieren
       />
+
       {/* Ladeanzeige */}
       {loading && (
         <div className="loading-container">
           <LoadingSpinner />
         </div>
       )}
+
       {/* Ausgabe der Erkennung */}
       <ResultDisplay items={result?.items} />
+
       {/* Feedback */}
       {result?.items?.length > 0 && <FeedbackForm onSubmit={handleFeedback} />}
     </div>
