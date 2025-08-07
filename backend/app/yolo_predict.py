@@ -10,7 +10,9 @@ import io
 #MODELL = "yolov8m.pt"
 #MODELL = "yolo11n.pt"
 #MODELL = "yolo11s.pt"
-MODELL = "yolo11m.pt"
+#MODELL = "yolo11m.pt"
+#MODELL = "yolo11l.pt"
+MODELL = "yolo11x.pt"
 model = YOLO(MODELL)
 
 # Funktion ist ein Platzhalter für die spätere YOLO-Erkennung
