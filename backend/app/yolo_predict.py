@@ -5,7 +5,7 @@ from PIL import Image
 from ultralytics import YOLO
 
 # Vortrainiertes YOLO-Modell laden (einmalig)
-#MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
+MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 #MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
 #MODELL = "yolo11n.pt"
@@ -13,7 +13,7 @@ from ultralytics import YOLO
 #MODELL = "yolo11m.pt"
 #MODELL = "yolo11l.pt"
 #MODELL = "yolo11x.pt"
-MODELL = r"models\yolov8n_best.pt"
+#MODELL = r"models\yolov8n_best.pt"
 model = YOLO(MODELL)
 
 # Funktion ist ein Platzhalter für die spätere YOLO-Erkennung
