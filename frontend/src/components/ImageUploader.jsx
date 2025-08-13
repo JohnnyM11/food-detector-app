@@ -5,7 +5,8 @@ function ImageUploader({ onResult, setLoading }) {
 
   // Bild auswählen und an API senden
   const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return; // Abbruch beim Datei-Dialog, falls es kein File ist bzw. kann File sonst undefined sein
     setImage(URL.createObjectURL(file)); // Vorschau anzeigen
 
     // Vorbereitung für API-Request
