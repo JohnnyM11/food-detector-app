@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react"; // useEffect lädt Daten ein
 function FeedbackForm({ onSubmit }) {
   const [showInput, setShowInput] = useState(false); // Dropdown anzeigen? Wird true bei Daumen runter
   const [selectedLabel, setSelectedLabel] = useState(""); // User-Korrektur (z.B. Apfel statt Banane) übers Dropdown
-  const [labelOptions, setLabelOptions] = useState(""); // Die vom Backend geladenen Labels (Dropdown-Auswahl)
+  const [labelOptions, setLabelOptions] = useState([]); // Die vom Backend geladenen Labels (Dropdown-Auswahl); [] statt "" für die Map (Array statt String)
 
   useEffect(() => {
     // useEffect() wird beim ersten Laden der Komponente aufgerufen
@@ -29,7 +29,7 @@ function FeedbackForm({ onSubmit }) {
     // Senden/Submit Button gedrückt
     if (!selectedLabel) return;
     onSubmit(selectedLabel); // Rückgabe der Auswahl an App
-    selectedLabel(""); // Dropdown-Auswahl zurücksetzen
+    setSelectedLabel(""); // Dropdown-Auswahl zurücksetzen; Korr: setSelectedLabel statt selectedLabel
     setShowInput(false); // Dropdown ausblenden
   };
 
