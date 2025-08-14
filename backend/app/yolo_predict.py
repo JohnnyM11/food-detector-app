@@ -1,11 +1,12 @@
 # app/yolo_predict.py
 
 import io
-from pathlib import Path
+import os
 from PIL import Image
 from ultralytics import YOLO
 
-# Vortrainiertes YOLO-Modell laden (einmalig)
+# Modell-Auswahl
+# Standardmodelle von YOLO-Hub:
 #MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 #MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
@@ -14,14 +15,21 @@ from ultralytics import YOLO
 #MODELL = "yolo11m.pt"
 #MODELL = "yolo11l.pt"
 #MODELL = "yolo11x.pt"
-MODELL = "models/yolov8n_best.pt"
-model = YOLO(MODELL)
 
-# Funktion ist ein Platzhalter für die spätere YOLO-Erkennung
+# Eigenes trainiertes Modell im backend/models/ Ordner:
+MODELL = "models/yolov8n_best.pt"
+
+if not os.path.isabs(MODELL) and os.path.exists(os.path.join(os.path.dirname(__file__), MODELL)):
+    model_path = os.path.join(os.path.dirname(__file__), MODELL)
+else:
+    model_path = MODELL
+
+model = YOLO(model_path)
+
 def run_inference(image_bytes: bytes) -> dict:
+    """Führt Inferenz auf einem Bild aus und gibt Vorhersagen zurück."""
     # Bilddaten aus Bytes lesen
     image = Image.open(io.BytesIO(image_bytes))
-
     # Inference mit YOLO
     results = model(image)
     
