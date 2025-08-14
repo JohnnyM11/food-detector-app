@@ -1,6 +1,7 @@
 # app/yolo_predict.py
 
 import io
+from pathlib import Path
 from PIL import Image
 from ultralytics import YOLO
 
@@ -13,7 +14,7 @@ from ultralytics import YOLO
 #MODELL = "yolo11m.pt"
 #MODELL = "yolo11l.pt"
 #MODELL = "yolo11x.pt"
-MODELL = r"models\yolov8n_best.pt"
+MODELL = "models/yolov8n_best.pt"
 model = YOLO(MODELL)
 
 # Funktion ist ein Platzhalter für die spätere YOLO-Erkennung
