@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 
 function ImageUploader({ onResult, setLoading }) {
-  const [image, setImage] = useState(null); // Vorschau für Anzeige
+  const [image, setImage] = useState(null); // Vorschau für Anzeige des hochgeladenen Bildes
+  const [fileName, setFileName] = useState(""); // Dateinamen als eigenen State
 
   // Bild auswählen und an API senden
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return; // Abbruch beim Datei-Dialog, falls es kein File ist bzw. kann File sonst undefined sein
+
     setImage(URL.createObjectURL(file)); // Vorschau anzeigen
+    setFileName(file.name);
 
     // Vorbereitung für API-Request
     const formData = new FormData();
@@ -29,8 +32,10 @@ function ImageUploader({ onResult, setLoading }) {
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleFileChange} />
-      <p>{image}</p>
-      <img src={image} alt="Preview" width="300" />
+      {fileName && (
+        <div style={{ marginTop: "8px", fontWeight: "bold" }}>{fileName}</div>
+      )}
+      {image && <img src={image} alt="Preview" width="300" />}
     </div>
   );
 }
