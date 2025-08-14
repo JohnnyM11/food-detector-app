@@ -17,7 +17,7 @@ from ultralytics import YOLO
 #MODELL = "yolo11x.pt"
 
 # Eigenes trainiertes Modell im backend/models/ Ordner:
-MODELL = "models/yolov8n_best.pt"
+MODELL = "../models/yolov8n_best.pt"
 
 if not os.path.isabs(MODELL) and os.path.exists(os.path.join(os.path.dirname(__file__), MODELL)):
     model_path = os.path.join(os.path.dirname(__file__), MODELL)
