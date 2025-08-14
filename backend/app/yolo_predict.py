@@ -19,12 +19,12 @@ from ultralytics import YOLO
 # Eigenes trainiertes Modell im backend/models/ Ordner:
 MODELL = "../models/yolov8n_best.pt"
 
-if not os.path.isabs(MODELL) and os.path.exists(os.path.join(os.path.dirname(__file__), MODELL)):
-    model_path = os.path.join(os.path.dirname(__file__), MODELL)
-else:
-    model_path = MODELL
+# if not os.path.isabs(MODELL) and os.path.exists(os.path.join(os.path.dirname(__file__), MODELL)):
+#     model_path = os.path.join(os.path.dirname(__file__), MODELL)
+# else:
+#     model_path = MODELL
 
-model = YOLO(model_path)
+model = YOLO(MODELL)
 
 def run_inference(image_bytes: bytes) -> dict:
     """Führt Inferenz auf einem Bild aus und gibt Vorhersagen zurück."""
