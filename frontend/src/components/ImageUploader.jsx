@@ -29,6 +29,7 @@ function ImageUploader({ onResult, setLoading }) {
   return (
     <div>
       <input type="file" accept="image/*" onChange={handleFileChange} />
+      {"\n"}
       {image && <img src={image} alt="Preview" width="300" />}
     </div>
   );
