@@ -1,7 +1,7 @@
 # app/yolo_predict.py
 
 import io
-import os
+from pathlib import Path
 from PIL import Image
 from ultralytics import YOLO
 
@@ -17,12 +17,18 @@ from ultralytics import YOLO
 #MODELL = "yolo11x.pt"
 
 # Eigenes trainiertes Modell im backend/models/ Ordner:
-#MODELL = "../models/yolov8n_last.pt"
+MODELL = "models/yolov8n_last.pt"
 #MODELL = "../models/yolov8n_best.pt"
 #MODELL = "../models/yolov8n_last_2025-08-13.pt"
-MODELL = "../models/yolov8n_best_2025-08-13.pt"
+#MODELL = "../models/yolov8n_best_2025-08-13.pt"
 
-model = YOLO(MODELL)
+BACKEND_DIR = Path(__file__).resolve().parents[1]
+def resolve_weights(spec: str) -> str:
+    looks_like_path = any(s in spec for s in ("/", "\\")) or spec.startswith((".", "..", "models"))
+    return str((BACKEND_DIR / spec).resolve()) if looks_like_path else spec
+
+model = YOLO(resolve_weights(MODELL))
+#model = YOLO(MODELL)
 
 def run_inference(image_bytes: bytes) -> dict:
     """Führt Inferenz auf einem Bild aus und gibt Vorhersagen zurück."""
