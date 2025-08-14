@@ -44,13 +44,11 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>
-        Food Detector{" "}
-        <span style={{ fontSize: "0.5em", color: "#666" }}>
-          {VERSION} (Modell: {modelName}){" "}
-        </span>
-      </h1>
+    <div style={{ fontFamily: "Arial" }}>
+      <h1 style={{ marginBottom: "4px" }}>Food Detector </h1>
+      <div style={{ fontSize: "0.9em", color: "#666", marginBottom: "20px" }}>
+        {VERSION} (Modell: {modelName})
+      </div>
 
       {/* Bild-Upload und Bildnamen mit in result einfügen */}
       <ImageUploader

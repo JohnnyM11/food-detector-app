@@ -1,23 +1,39 @@
 # app/yolo_predict.py
 
-from ultralytics import YOLO
-from PIL import Image
 import io
+from pathlib import Path
+from PIL import Image
+from ultralytics import YOLO
 
-# Vortrainiertes YOLO-Modell laden (einmalig)
+# Modell-Auswahl
+# Standardmodelle von YOLO-Hub:
 #MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 #MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
 #MODELL = "yolo11n.pt"
 #MODELL = "yolo11s.pt"
-MODELL = "yolo11m.pt"
-model = YOLO(MODELL)
+#MODELL = "yolo11m.pt"
+#MODELL = "yolo11l.pt"
+#MODELL = "yolo11x.pt"
 
-# Funktion ist ein Platzhalter für die spätere YOLO-Erkennung
+# Eigenes trainiertes Modell im backend/models/ Ordner:
+MODELL = "models/yolov8n_last.pt"
+#MODELL = "../models/yolov8n_best.pt"
+#MODELL = "../models/yolov8n_last_2025-08-13.pt"
+#MODELL = "../models/yolov8n_best_2025-08-13.pt"
+
+BACKEND_DIR = Path(__file__).resolve().parents[1]
+def resolve_weights(spec: str) -> str:
+    looks_like_path = any(s in spec for s in ("/", "\\")) or spec.startswith((".", "..", "models"))
+    return str((BACKEND_DIR / spec).resolve()) if looks_like_path else spec
+
+model = YOLO(resolve_weights(MODELL))
+#model = YOLO(MODELL)
+
 def run_inference(image_bytes: bytes) -> dict:
+    """Führt Inferenz auf einem Bild aus und gibt Vorhersagen zurück."""
     # Bilddaten aus Bytes lesen
     image = Image.open(io.BytesIO(image_bytes))
-
     # Inference mit YOLO
     results = model(image)
     
