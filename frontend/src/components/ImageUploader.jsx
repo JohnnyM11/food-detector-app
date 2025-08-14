@@ -31,7 +31,12 @@ function ImageUploader({ onResult, setLoading }) {
 
   return (
     <div>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        style={{ color: "transparent", width: "140px" }}
+      />
       {fileName && (
         <div style={{ marginTop: "8px", fontWeight: "bold" }}>{fileName}</div>
       )}
