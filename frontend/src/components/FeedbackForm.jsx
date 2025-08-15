@@ -34,13 +34,13 @@ function FeedbackForm({ onSubmit }) {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "15px" }}>
       <button onClick={() => onSubmit({ correction: "like" })}>👍</button>{" "}
       {/*Daumen hoch direkt als "like" übergeben */}
       <button onClick={handleDislike}>👎</button> {/*Zeigt das Dropdown an */}
       {showInput && (
-        <div>
-          <label htmlFor="correction">Korrekte Auswahl:</label>
+        <div style={{ marginTop: "5px" }}>
+          <label htmlFor="correction">Korrekte Auswahl: </label>
           <select
             id="correction"
             value={selectedLabel}
