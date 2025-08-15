@@ -3,3 +3,4 @@ uvicorn
 pillow
 python-multipart
 ultralytics
+requests

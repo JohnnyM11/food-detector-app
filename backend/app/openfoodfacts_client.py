@@ -23,14 +23,14 @@ OFF_SEARCH_URL = "https://world.openfoodfacts.org/cgi/search.pl"
 # - Enthält eine Kontaktmöglichkeit (E‑Mail/URL) für Rückfragen/Rate‑Limits
 # OpenFoodFacts hilft es bei Problemen/Fragen und erleichtert die Kontaktaufnahme.
 HEADERS = {
-    "User-Agent": "Coburg-BA-Naehrwerte/1.0 (mailto:your.email@example.com)"
+    "User-Agent": "Coburg-BA:Food-Detector/1.0 (mailto:johnny.mueller@stud.hs-coburg.de)"
 }
 
 
 def _normalize_base(label: str) -> str:
     """
     Minimal neutrale Normalisierung:
-    - trimmen
+    - trimmen (Whitespace am Anfang/Ende entfernen)
     - in Kleinbuchstaben
     - '_' und '-' werden zu Leerzeichen
     - Mehrfach‑Leerzeichen reduzieren
