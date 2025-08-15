@@ -1,0 +1,8 @@
+yolov8n_best_2025-08-13:
+Epochs=1
+
+yolov8n_best_2025-08-14:
+Epochs=100 (Timeout bei ca. 35)
+
+yolov8n_best_2025-08-15:
+Epochs=30
