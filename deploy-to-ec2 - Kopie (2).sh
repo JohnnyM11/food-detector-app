@@ -1,36 +1,20 @@
 #!/bin/bash 
 
-# Fallback auf "dev", falls kein Branch angegeben
-BRANCH=${1:-dev}
+# Fallback auf "main", falls kein Branch angegeben
+BRANCH=${1:-main}
 TIMESTAMP=$(date +"%Y-%m-%d %H:%M")
 
 echo "🔁 Aktueller Branch: $BRANCH"
 echo "🔼 Commit und Push mit Zeitstempel..."
 
-# Abbrechen bei Fehlern + sauberes Pipe-Verhalten
-set -euo pipefail
-
-# Zentrale Variablen, damit nur hier geändert werden muss
-KEY="C:/Users/JM11/OneDrive/_Studium Coburg/10. Semester Bachelorarbeit/Bachelorarbeit/_Bachelorarbeit/AWS/KeyPair_JM.pem"
-HOST="ec2-user@63.178.179.86"
-REMOTE_SCRIPT="~/deploy.sh"
-
 # Git-Vorgänge lokal
 git checkout "$BRANCH" || { echo "❌ Branch '$BRANCH' existiert nicht."; exit 1; }
-
-# Nur committen, wenn es wirklich Änderungen gibt
-if ! git diff --quiet || ! git diff --cached --quiet; then   # staged oder unstaged Änderungen?
-  git add .
-  git commit -m "🔄 Deploy $BRANCH ($TIMESTAMP)"
-else
-  echo "ℹ️  Keine lokalen Codeänderungen – überspringe Commit."
-fi
-
+git add .
+git commit -m "🔄 Deploy $BRANCH ($TIMESTAMP)"
 git push origin "$BRANCH" || { echo "❌ Push fehlgeschlagen."; exit 1; }
 
 echo "🚀 Deploy auf EC2 wird ausgeführt..."
-# Variablen verwenden, Key ist bereits gequoted
-ssh -i "$KEY" "$HOST" "$REMOTE_SCRIPT $BRANCH"
+ssh -i "C:/Users/JM11/OneDrive/_Studium Coburg/10. Semester Bachelorarbeit/Bachelorarbeit/_Bachelorarbeit/AWS/KeyPair_JM.pem" ec2-user@63.178.179.86 "~/deploy.sh $BRANCH"
 
 # Merge-Abfrage (nur wenn nicht main)
 if [ "$BRANCH" != "main" ]; then
@@ -38,9 +22,9 @@ if [ "$BRANCH" != "main" ]; then
   read -p "Möchtest du den Branch '$BRANCH' jetzt mit 'main' mergen? (y/n): " MERGE
 
   if [ "$MERGE" == "y" ]; then
-    echo ""
-    read -p "📝 Kommentar für den Merge-Commit: " MERGE_MSG
-
+	echo ""
+	read -p "📝 Kommentar für den Merge-Commit: " MERGE_MSG
+	
     echo "🔀 Merge wird durchgeführt..."
     git checkout main
     git merge "$BRANCH" --no-ff -m "$MERGE_MSG"
