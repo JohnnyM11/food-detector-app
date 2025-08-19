@@ -22,7 +22,7 @@ from pathlib import Path
 
 # ---- Modell laden (einmalig beim Import) -------------------
 # Standardmodelle von YOLO-Hub:
-#MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
+MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 #MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
 #MODELL = "yolo11n.pt"
@@ -32,10 +32,10 @@ from pathlib import Path
 #MODELL = "yolo11x.pt"
 
 # Eigenes trainiertes Modell im Ordner backend/models/:
-MODELL = "models/yolov8n_last.pt"
+#MODELL = "models/yolov8n_last.pt"
 #MODELL = "models/yolov8n_best.pt"
 #MODELL = "models/yolov8n_last_2025-08-13.pt"
-#MODELL = "models/yolov8n_best_2025-08-13.pt"
+#MODELL = "models/yolov8n_best_2025-08-14.pt"
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 def resolve_weights(spec: str) -> str:
@@ -82,6 +82,6 @@ def run_inference(image_bytes: bytes) -> dict:
 
 def get_model_name() -> str:
     """
-    Liefert den aktuell verwendeten Modellnamen (für /model-info im Backend).
+    Liefert den aktuell verwendeten Modellnamen (für /model-info im Backend). 
     """
     return MODELL

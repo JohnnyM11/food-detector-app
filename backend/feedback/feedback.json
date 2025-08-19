@@ -1,0 +1,58 @@
+[
+  {
+    "timestamp": "2025-08-01T13:44:41.165226",
+    "original": null,
+    "correction": null,
+    "confidence": null,
+    "image_id": null
+  },
+  {
+    "timestamp": "2025-08-01T13:45:13.797637",
+    "original": null,
+    "correction": null,
+    "confidence": null,
+    "image_id": null
+  },
+  {
+    "timestamp": "2025-08-01 16:12:35 CEST",
+    "original": "sandwich",
+    "correction": "like",
+    "confidence": 0.592,
+    "image_id": "unbekannt.jpg"
+  },
+  {
+    "timestamp": "2025-08-01 16:13:38 CEST",
+    "original": "sandwich",
+    "correction": "cake",
+    "confidence": 0.592,
+    "image_id": "unbekannt.jpg"
+  },
+  {
+    "timestamp": "2025-08-01 17:03:44 CEST",
+    "original": "dining table",
+    "correction": "like",
+    "confidence": 0.305,
+    "image_id": "83981.jpg"
+  },
+  {
+    "timestamp": "2025-08-01 17:03:53 CEST",
+    "original": "dining table",
+    "correction": "cake",
+    "confidence": 0.305,
+    "image_id": "83981.jpg"
+  },
+  {
+    "timestamp": "2025-08-01 17:17:52 CEST",
+    "original": "cake",
+    "correction": "like",
+    "confidence": 0.449,
+    "image_id": "101251.jpg"
+  },
+  {
+    "timestamp": "2025-08-15 15:57:02 +0200",
+    "original": "Apple",
+    "correction": "like",
+    "confidence": 0.69,
+    "image_id": "0deb94399a94468a.jpg"
+  }
+]

@@ -1,0 +1,15 @@
+[Unit]
+Description=React Frontend (Serve)
+After=network.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user/food-detector-app/frontend
+ExecStart=/usr/bin/npx serve -s dist -l 3000
+Restart=always
+RestartSec=10
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

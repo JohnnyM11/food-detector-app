@@ -8,9 +8,8 @@
 # - /feedback: Nutzerfeedback in JSON-Datei anhängen.
 # ------------------------------------------------------------
 
-from fastapi import FastAPI, UploadFile, File                 # Webframework & Upload-Handling
+from fastapi import FastAPI, UploadFile, File, Request        # Webframework & Upload-Handling & Feedback-Endpoint (JSON-Body)
 from fastapi.middleware.cors import CORSMiddleware            # CORS-Header erlauben Cross-Origin-Frontend
-from fastapi import Request                                   # für Feedback-Endpoint (JSON-Body)
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import json
@@ -21,14 +20,43 @@ from openfoodfacts_client import get_nutrition_bulk           # Batch-Funktion: 
 
 app = FastAPI()                                               # FastAPI-App anlegen
 
-# --- CORS erlauben (Frontend z. B. http://localhost:5173) ---
+# --- CORS für Frontend-Zugriff ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],                                      # später gern einschränken auf deine Frontend-URL
+    allow_origins=["*"],                                      # später evtl. einschränken auf Frontend-URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ------------------------------------------------------------
+# /healthz
+# - Liefert einfachen Healthcheck
+# ------------------------------------------------------------
+@app.get("/healthz") 
+async def healthz():
+    return {"status": "ok"}
+
+
+# ------------------------------------------------------------
+# /model-info
+# - Liefert nur den Modellnamen (Anzeige im Frontend-Header)
+# ------------------------------------------------------------
+@app.get("/model-info") 
+async def get_model_info():
+    return {"model": get_model_name()}
+
+
+# ------------------------------------------------------------
+# /labels
+# - Liefert alle vom Modell erkennbaren Klassen (für Feedback-Dropdown)
+# ------------------------------------------------------------
+@app.get("/labels")
+async def get_labels():
+    # Zugriff auf das YOLO-Modell-Objekt (names -> {class_id: "label"})
+    from yolo_predict import model
+    return {"labels": list(model.names.values())}
+
 
 # ------------------------------------------------------------
 # /predict
@@ -69,26 +97,6 @@ async def predict(file: UploadFile = File(...)):
     # 6) Antwortschema so belassen, wie dein Frontend es nutzt:
     #    In deiner App.jsx erwartest du { "items": [...] }
     return {"items": enriched_items}
-
-
-# ------------------------------------------------------------
-# /labels
-# - Liefert alle vom Modell erkennbaren Klassen (für Feedback-Dropdown)
-# ------------------------------------------------------------
-@app.get("/labels")
-async def get_labels():
-    # Zugriff auf das YOLO-Modell-Objekt (names -> {class_id: "label"})
-    from yolo_predict import model
-    return {"labels": list(model.names.values())}
-
-
-# ------------------------------------------------------------
-# /model-info
-# - Liefert nur den Modellnamen (Anzeige im Frontend-Header)
-# ------------------------------------------------------------
-@app.get("/model-info")
-async def get_model_info():
-    return {"model": get_model_name()}
 
 
 # ------------------------------------------------------------

@@ -8,17 +8,24 @@ function App() {
   const [result, setResult] = useState({ items: [], image_id: "" }); // speichert API-Ergebnis im State
   const [loading, setLoading] = useState(false); // Ladeanzeige im State
   const [modelName, setModelName] = useState(""); // Modellname im State
-  const VERSION = "V1.1"; // Versionierung
+  const VERSION = "V1.2"; // Versionierung
 
   // Modellname vom Backend holen
   useEffect(() => {
-    const fetchModelInfo = async () => {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/model-info`);
-      const data = await res.json();
-      setModelName(data.model);
-    };
-    fetchModelInfo();
-  }, []);
+  const fetchModelInfo = async () => {
+   try {
+     const res = await fetch(`${import.meta.env.VITE_API_URL}/model-info`);
+     if (!res.ok) throw new Error(`HTTP ${res.status}`);
+     const data = await res.json();
+     setModelName(data.model);
+   } catch (err) {
+     console.error("Model-Info fetch failed:", err);
+     setModelName("unbekannt"); // UI stürzt nicht ab
+   }
+  };
+  fetchModelInfo();
+}, []);
+
 
   const handleFeedback = async (input) => {
     const original = result?.items?.[0]?.label || "unbekannt";
