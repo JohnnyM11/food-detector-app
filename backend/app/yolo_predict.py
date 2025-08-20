@@ -1,13 +1,28 @@
-# app/yolo_predict.py
+# yolo_predict.py
+# ------------------------------------------------------------
+# Lädt ein YOLO-Modell und führt Inferenz auf Bildbytes aus.
+# Gibt ein einheitliches JSON-ähnliches Dict zurück:
+# {
+#   "predictions": [
+#      {
+#         "class_id": int,
+#         "label": str,           # Klassenname aus model.names (englisch)
+#         "confidence": float,    # 0..1
+#         "bbox": [x1, y1, x2, y2]# optional fürs Frontend (Pixelkoordinaten)
+#      }, ...
+#   ]
+# }
+# Dazu: get_model_name() für das Frontend (Anzeige im Header).
+# ------------------------------------------------------------
 
-import io
+from ultralytics import YOLO          # Ultralytics YOLO Inferenz
+from PIL import Image                 # Bildöffnung aus Bytes
+import io                             # Bytes-Buffer für PIL
 from pathlib import Path
-from PIL import Image
-from ultralytics import YOLO
 
-# Modell-Auswahl
+# ---- Modell laden (einmalig beim Import) -------------------
 # Standardmodelle von YOLO-Hub:
-#MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
+MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 #MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
 #MODELL = "yolo11n.pt"
@@ -16,58 +31,57 @@ from ultralytics import YOLO
 #MODELL = "yolo11l.pt"
 #MODELL = "yolo11x.pt"
 
-# Eigenes trainiertes Modell im backend/models/ Ordner:
-MODELL = "models/yolov8n_last.pt"
-#MODELL = "../models/yolov8n_best.pt"
-#MODELL = "../models/yolov8n_last_2025-08-13.pt"
-#MODELL = "../models/yolov8n_best_2025-08-13.pt"
+# Eigenes trainiertes Modell im Ordner backend/models/:
+#MODELL = "models/yolov8n_last.pt"
+#MODELL = "models/yolov8n_best.pt"
+#MODELL = "models/yolov8n_last_2025-08-13.pt"
+#MODELL = "models/yolov8n_best_2025-08-14.pt"
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 def resolve_weights(spec: str) -> str:
     looks_like_path = any(s in spec for s in ("/", "\\")) or spec.startswith((".", "..", "models"))
     return str((BACKEND_DIR / spec).resolve()) if looks_like_path else spec
 
-model = YOLO(resolve_weights(MODELL))
-#model = YOLO(MODELL)
+model = YOLO(resolve_weights(MODELL))       # lädt Gewichte und bereitet Inferenz vor
 
 def run_inference(image_bytes: bytes) -> dict:
-    """Führt Inferenz auf einem Bild aus und gibt Vorhersagen zurück."""
-    # Bilddaten aus Bytes lesen
+    """
+    Führt YOLO-Inferenz auf einem Bild (als Bytes) aus und
+    liefert ein Dict mit 'predictions' (Liste von Erkennungen).
+    """
+    # Bytes -> PIL Image (PIL erwartet einen Datei-ähnlichen Stream)
     image = Image.open(io.BytesIO(image_bytes))
-    # Inference mit YOLO
+
+    # Inferenz: Ultralytics-API akzeptiert direkt PIL-Images
     results = model(image)
-    
-    # Vorhersagen extrahieren
+
+    # Vorhersagen extrahieren (pro Result-Frame die Boxes)
     predictions = []
     for r in results:
+        # r.boxes enthält alle Detektionen; jede Box hat Koordinaten & Meta
         for box in r.boxes:
-            class_id = int(box.cls)
-            confidence = float(box.conf)
-            label = model.names[class_id]
+            class_id = int(box.cls)                 # Klassenindex (z. B. 0..N)
+            confidence = float(box.conf)            # Konfidenz 0..1
+            label = model.names[class_id]           # Klassenname (englisch)
+
+            # Bounding Box als Liste [x1, y1, x2, y2] (Float -> round für saubere Ausgabe)
+            # .xyxy gibt Tensor mit [x1, y1, x2, y2]; wir holen das erste Element (.tolist()[0])
+            x1, y1, x2, y2 = box.xyxy[0].tolist()
+            bbox = [round(x1, 1), round(y1, 1), round(x2, 1), round(y2, 1)]
+
             predictions.append({
                 "class_id": class_id,
                 "label": label,
-                "confidence": round(confidence, 3)
+                "confidence": round(confidence, 3),
+                "bbox": bbox
             })
 
+    # Einheitliches Rückgabeformat, das das Backend / Frontend leicht weiterverarbeiten kann
     return {"predictions": predictions}
 
 
-    # Beispielhafte Rückgabe mit einem "erkanntem" Apfel
-    """ return {
-        "items": [
-            {
-                "label": "Apfel", 
-                "confidence": 0.95, 
-                "nutrition": {
-                    "kcal": 52, 
-                    "protein": 0.3, 
-                    "fat": 0.2, 
-                    "carbs": 14
-                }
-            }
-        ]
-    } """
-
-def get_model_name():
+def get_model_name() -> str:
+    """
+    Liefert den aktuell verwendeten Modellnamen (für /model-info im Backend). 
+    """
     return MODELL

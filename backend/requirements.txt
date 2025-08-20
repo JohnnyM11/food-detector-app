@@ -1,5 +1,14 @@
+# CPU-Only Wheels für PyTorch (keine CUDA-Treiber nötig auf EC2 ohne GPU)
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 fastapi
 uvicorn
 pillow
 python-multipart
+requests
 ultralytics
+
+# PyTorch CPU fest pinnen (kleinere Wheels, stabil)
+torch==2.3.1+cpu
+# Falls torchvision gebraucht wird:
+# torchvision==0.18.1+cpu
