@@ -8,22 +8,25 @@
 # - /feedback: Nutzerfeedback in JSON-Datei anhängen.
 # ------------------------------------------------------------
 
-from fastapi import FastAPI, UploadFile, File, Request        # Webframework & Upload-Handling & Feedback-Endpoint (JSON-Body)
-from fastapi.middleware.cors import CORSMiddleware            # CORS-Header erlauben Cross-Origin-Frontend
+from fastapi import FastAPI, UploadFile, File, Request                  # Webframework & Upload-Handling & Feedback-Endpoint (JSON-Body)
+from fastapi.middleware.cors import CORSMiddleware                      # CORS-Header erlauben Cross-Origin-Frontend
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import json
-import os
+# import json
+import hashlib, uuid, os, json                                          # UUIDs für Feedback-IDs, Dateizugriff
 from pathlib import Path
-from yolo_predict import run_inference, get_model_name        # eigene Inferenz & Modellinfo
-from openfoodfacts_client import get_nutrition_bulk           # Batch-Funktion: Labels -> Nährwerte
+from yolo_predict import run_inference, get_model_name                  # eigene Inferenz & Modellinfo
+from openfoodfacts_client import get_nutrition_bulk                     # Batch-Funktion: Labels -> Nährwerte
 
-app = FastAPI()                                               # FastAPI-App anlegen
+app = FastAPI()                                                         # FastAPI-App anlegen
+
+UPLOAD_DIR = Path("/home/ec2-user/food-detector-app/backend/uploads")   # Upload-Verzeichnis
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)                           # Verzeichnis anlegen, falls nicht vorhanden
 
 # --- CORS für Frontend-Zugriff ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],                                      # später evtl. einschränken auf Frontend-URL
+    allow_origins=["*"],                                                # später evtl. einschränken auf Frontend-URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,6 +72,13 @@ async def get_labels():
 async def predict(file: UploadFile = File(...)):
     # 1) Gesamte Datei in Bytes lesen (für PIL/YOLO)
     image_bytes = await file.read()
+    
+    # Dateinamen-Hash generieren (für Uploads)
+    image_id = uuid.uuid4().hex                          # UUID als eindeutige ID
+    sha256 = hashlib.sha256(image_bytes).hexdigest()     # SHA256-Hash des Bildes (64-stellig)
+    # Originalbild speichern – ohne Original-Dateinamen:
+    with open(UPLOAD_DIR / f"{image_id}.jpg", "wb") as f:
+        f.write(image_bytes)
 
     # 2) YOLO-Inferenz durchführen -> {"predictions": [ { label, confidence, ... }, ... ]}
     result = run_inference(image_bytes)
@@ -94,9 +104,12 @@ async def predict(file: UploadFile = File(...)):
             "nutrition_per_100g": nutrition_map.get(key)  # kann None sein, wenn OFF nichts Passendes hat
         })
 
-    # 6) Antwortschema so belassen, wie dein Frontend es nutzt:
-    #    In deiner App.jsx erwartest du { "items": [...] }
-    return {"items": enriched_items}
+    # 6) Antwortschema, wie Frontend es nutzt:
+    #    App.jsx erwartet { "items": [...] }
+    return {"items": enriched_items,    # erkannte Objekte
+            "image_id": image_id,       # eindeutige ID für das Bild
+            "sha256": sha256            # SHA256-Hash des Bildes
+           }
 
 
 # ------------------------------------------------------------

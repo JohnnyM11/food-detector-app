@@ -12,20 +12,19 @@ function App() {
 
   // Modellname vom Backend holen
   useEffect(() => {
-  const fetchModelInfo = async () => {
-   try {
-     const res = await fetch(`${import.meta.env.VITE_API_URL}/model-info`);
-     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-     const data = await res.json();
-     setModelName(data.model);
-   } catch (err) {
-     console.error("Model-Info fetch failed:", err);
-     setModelName("unbekannt"); // UI stürzt nicht ab
-   }
-  };
-  fetchModelInfo();
-}, []);
-
+    const fetchModelInfo = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/model-info`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setModelName(data.model);
+      } catch (err) {
+        console.error("Model-Info fetch failed:", err);
+        setModelName("unbekannt"); // UI stürzt nicht ab
+      }
+    };
+    fetchModelInfo();
+  }, []);
 
   const handleFeedback = async (input) => {
     const original = result?.items?.[0]?.label || "unbekannt";
@@ -59,9 +58,7 @@ function App() {
 
       {/* Bild-Upload und Bildnamen mit in result einfügen */}
       <ImageUploader
-        onResult={(data, fileName) =>
-          setResult({ ...data, image_id: fileName })
-        }
+        onResult={(data) => setResult({ ...data, image_id: data.image_id })}
         setLoading={setLoading} // Ladeanzeige aktivieren
       />
 

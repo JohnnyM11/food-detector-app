@@ -25,7 +25,7 @@ function ImageUploader({ onResult, setLoading }) {
     });
 
     const data = await res.json();
-    onResult(data, file.name); // Ergebnis + Dateiname an App zurückgeben
+    onResult(data); // Ergebnis (API-Objekt) an App zurückgeben
     setLoading(false); // Ende Ladeanzeige
   };
 
