@@ -60,7 +60,7 @@ def cleanup_tmp(max_age_hours: int = 24) -> None:                       # Aufrä
 
 # ------------------------------------------------------------
 # /healthz
-# - Liefert einfachen Healthcheck
+# - Liefert einfachen Healthcheck 
 # ------------------------------------------------------------
 @app.get("/healthz") 
 async def healthz():
