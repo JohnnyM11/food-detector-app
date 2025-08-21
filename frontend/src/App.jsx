@@ -38,6 +38,8 @@ function App() {
       "2. correction": correction,
       "3. confidence": confidence,
       "4. image_id": image_id,
+      "5. sha256": result?.sha256 || "unbekannt", // SHA256-Hash des Bildes
+      "6. storage": result?.storage || "temp", // Speicherort des Bildes
     };
 
     await fetch(`${import.meta.env.VITE_API_URL}/feedback`, {
