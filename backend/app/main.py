@@ -49,14 +49,13 @@ if not FEEDBACK_FILE.exists():                                          # Feedba
 # Kann bei jedem /predict kurz laufen (kostet wenig)
 # ------------------------------------------------------------
 def cleanup_tmp(max_age_hours: int = 24) -> None:                       # Aufräumen nach max_age_hours = 24h
-    now = time.time()
-    threshold = max_age_hours * 3600
+    now = time.time()                                                   # Aktueller Zeitstempel
+    threshold = max_age_hours * 3600                                    # Schwellenwert in Sekunden
     try:
-        for p in TMP_DIR.glob("*.jpg"):
-            if now - p.stat().st_mtime > threshold:
-                p.unlink(missing_ok=True)
-    except Exception:
-        # bewusst stilles Aufräumen
+        for p in TMP_DIR.glob("*.jpg"):                                 # Durchsuche temporäres Verzeichnis nach JPG-Dateien
+            if now - p.stat().st_mtime > threshold:                     # Wenn Datei älter als threshold
+                p.unlink(missing_ok=True)                               # Lösche die Datei
+    except Exception:                                                   # Bei Fehlern -> ignorieren (stilles Aufräumen)
         pass
 
 # ------------------------------------------------------------
