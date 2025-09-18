@@ -22,12 +22,12 @@ from pathlib import Path
 
 # ---- Modell laden (einmalig beim Import) -------------------
 # Standardmodelle von YOLO-Hub:
-MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
+#MODELL = "yolov8n.pt"       # "nano"-Version: sehr schnell, Alternativen: small, medium, large, xlarge
 #MODELL = "yolov8s.pt"
 #MODELL = "yolov8m.pt"
 #MODELL = "yolo11n.pt"
 #MODELL = "yolo11s.pt"
-#MODELL = "yolo11m.pt"
+MODELL = "yolo11m.pt"
 #MODELL = "yolo11l.pt"
 #MODELL = "yolo11x.pt"
 
