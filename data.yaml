@@ -1,0 +1,71 @@
+path: /home/vault/b116ba/b117ba60/food # Pfad zum Arbeitsverzeichnis
+train: images/train # Unterordner mit Trainingsbildern
+val: images/val # Unterordner mit Validierungsbildern
+#train: C:/Users/JM11/OneDrive/Dokumente/_Studium/Data/data/food/images/train # Unterordner mit Trainingsbildern
+#val:   C:/Users/JM11/OneDrive/Dokumente/_Studium/Data/data/food/images/val # Unterordner mit Validierungsbildern
+
+names:
+  - Apple
+  - Artichoke
+  - Asparagus
+  - Bagel
+  - Banana
+  - Beer
+  - Bell pepper
+  - Bread
+  - Broccoli
+  - Burrito
+  - Cabbage
+  - Cake
+  - Carrot
+  - Cheese
+  - Coconut
+  - Coffee
+  - Cookie
+  - Crab
+  - Croissant
+  - Cucumber
+  - Dairy
+  - Doughnut
+  - Drink
+  - Egg
+  - Fast food
+  - Fish
+  - Fruit
+  - Grape
+  - Grapefruit
+  - Hamburger
+  - Hot dog
+  - Ice cream
+  - Juice
+  - Lemon
+  - Lobster
+  - Mango
+  - Milk
+  - Muffin
+  - Orange
+  - Oyster
+  - Pasta
+  - Pastry
+  - Peach
+  - Pear
+  - Pineapple
+  - Pizza
+  - Pomegranate
+  - Potato
+  - Pumpkin
+  - Radish
+  - Salad
+  - Sandwich
+  - Seafood
+  - Shrimp
+  - Snack
+  - Squid
+  - Strawberry
+  - Sushi
+  - Taco
+  - Tea
+  - Tomato
+  - Vegetable
+  - Watermelon
+  - Wine
