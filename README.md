@@ -18,7 +18,7 @@ Entwickelt im Rahmen der Bachelorarbeit an der Hochschule Coburg (2025).
 
 ## 🖼️ Demo (Screenshot)
 
-```md
+
 ![Startseite](Startseite.png)
 
 ![Load-Prediction](Load_small.png)
