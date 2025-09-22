@@ -27,15 +27,14 @@ from pathlib import Path
 #MODELL = "yolov8m.pt"
 #MODELL = "yolo11n.pt"
 #MODELL = "yolo11s.pt"
-MODELL = "yolo11m.pt"
+#MODELL = "yolo11m.pt"
 #MODELL = "yolo11l.pt"
 #MODELL = "yolo11x.pt"
 
 # Eigenes trainiertes Modell im Ordner backend/models/:
-#MODELL = "models/yolov8n_last.pt"
-#MODELL = "models/yolov8n_best.pt"
-#MODELL = "models/yolov8n_last_2025-08-13.pt"
-#MODELL = "models/yolov8n_best_2025-08-14.pt"
+MODELL = "models/yolo11m-best-2007.pt"
+#MODELL = "models/yolo11n-best-1257.pt"
+#MODELL = "models/yolo11s-best-1625.pt"
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 def resolve_weights(spec: str) -> str:
