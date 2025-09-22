@@ -8,7 +8,7 @@ function App() {
   const [result, setResult] = useState({ items: [], image_id: "" }); // speichert API-Ergebnis im State
   const [loading, setLoading] = useState(false); // Ladeanzeige im State
   const [modelName, setModelName] = useState(""); // Modellname im State
-  const VERSION = "V1.2.1"; // Versionierung
+  const VERSION = "V1.3"; // Versionierung
 
   // Modellname vom Backend holen
   useEffect(() => {
