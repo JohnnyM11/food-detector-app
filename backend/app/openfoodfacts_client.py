@@ -26,6 +26,8 @@ HEADERS = {
     "User-Agent": "Coburg-BA:Food-Detector/1.0 (mailto:johnny.mueller@stud.hs-coburg.de)"
 }
 
+OFF_TIMEOUT = (2.0, 5.0)  # connect, read 
+
 
 def _normalize_base(label: str) -> str:
     """
@@ -99,7 +101,7 @@ def get_nutrition_for_food(query: str) -> dict | None:
             "fields": "product_name,lang,nutriments,categories_tags"  # nur relevante Felder
         }
         try:
-            r = requests.get(OFF_SEARCH_URL, params=params, headers=HEADERS, timeout=8)
+            r = requests.get(OFF_SEARCH_URL, params=params, headers=HEADERS, timeout=OFF_TIMEOUT) # alternativ: timeout=8 (sec total)
             r.raise_for_status()
             data = r.json()
         except Exception:

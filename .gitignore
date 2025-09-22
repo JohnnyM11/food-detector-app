@@ -1,6 +1,7 @@
 # Project
 backend/models/*.pt
-backend/feedback/feedback.json
+backend/feedback/
+frontend/dist/
 
 # Python
 __pycache__/
