@@ -98,57 +98,90 @@ async def get_labels():
 # ------------------------------------------------------------
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
+    # ---- Timings initialisieren ----
+    t_total0 = time.perf_counter()
+    t_pre_ms = 0.0
+    t_infer_ms = 0.0
+    t_post_ms = 0.0
+    t_openfoodfacts_ms = 0.0
+
     # Temp-Cleanup bei jedem Request
     cleanup_tmp(24)
 
-    # 1) Gesamte Datei in Bytes lesen (für PIL/YOLO)
+    # === (1) PRE: Upload lesen + optionales Speichern ===
+    t0 = time.perf_counter()
+    # 1.1 Datei in Bytes lesen (für PIL/YOLO)
     image_bytes = await file.read()
-    
-    # IDs bilden (für Uploads)
-    image_id = uuid.uuid4().hex                          # UUID als eindeutige ID
-    sha256 = hashlib.sha256(image_bytes).hexdigest()     # SHA256-Hash des Bildes (64-stellig)
-    
-    # Originalbild temporär speichern – ohne Original-Dateinamen:
+
+    # 1.2 IDs bilden (für Uploads/Debug)
+    image_id = uuid.uuid4().hex
+    sha256 = hashlib.sha256(image_bytes).hexdigest()
+
+    # 1.3 Originalbild temporär speichern – ohne Original-Dateinamen:
     tmp_path = TMP_DIR / f"{image_id}.jpg"
     with open(tmp_path, "wb") as f:
         f.write(image_bytes)
     tmp_path.touch()  # mtime aktualisieren (hilft später beim Aufräumen)
-    # Originalbild dauerhaft speichern
+    # (Optional dauerhaft speichern -> auskommentiert lassen)
     # with open(UPLOAD_DIR / f"{image_id}.jpg", "wb") as f:
     #     f.write(image_bytes)
 
-    # 2) YOLO-Inferenz durchführen -> {"predictions": [ { label, confidence, ... }, ... ]}
-    result = run_inference(image_bytes)
-    predictions = result.get("predictions", [])
+    t_pre_ms += (time.perf_counter() - t0) * 1000.0
 
-    # 3) Alle Label-Namen einsammeln (nur die, die vorhanden sind)
+    # === (2) INFER: YOLO-Inferenz ===
+    t0 = time.perf_counter()
+    # Erwartet {"predictions": [ { label, confidence, bbox/... }, ... ]}
+    result = run_inference(image_bytes)
+    t_infer_ms += (time.perf_counter() - t0) * 1000.0
+
+    predictions = result.get("predictions", []) or []
+
+    # === (3) OFF: OpenFoodFacts-Abfrage (Batch) ===
     labels = []
     for p in predictions:
         lbl = (p.get("label") or "").strip()
         if lbl:
             labels.append(lbl)
 
-    # 4) Nährwertdaten in einem Rutsch holen (lru_cache im Client verhindert Doppelanfragen)
-    #    Rückgabe-Form: { "<label in lowercase>": { ...naehrwerte... } | None }
-    nutrition_map = get_nutrition_bulk(labels)
+    nutrition_map = {}
+    if labels:
+        t0 = time.perf_counter()
+        # get_nutrition_bulk: lru_cache im Client verhindert Doppelanfragen
+        # Rückgabe-Form: { "<label lower>": {...} | None }
+        try:
+            nutrition_map = get_nutrition_bulk(labels) or {}
+        except Exception:
+            # OFF-Fehler sollen die Antwort nicht verhindern → leer lassen
+            nutrition_map = {}
+        t_openfoodfacts_ms += (time.perf_counter() - t0) * 1000.0
 
-    # 5) Predictions anreichern: Für jedes Item die passenden Nährwerte dranhängen
+    # === (4) POST: Predictions mit OFF-Daten anreichern ===
+    t0 = time.perf_counter()
     enriched_items = []
     for p in predictions:
         key = (p.get("label") or "").strip().lower()
         enriched_items.append({
             **p,  # behält class_id, label, confidence, ggf. bbox
-            "nutrition_per_100g": nutrition_map.get(key)  # kann None sein, wenn OFF nichts Passendes hat
+            "nutrition_per_100g": nutrition_map.get(key)  # kann None sein
         })
+    t_post_ms += (time.perf_counter() - t0) * 1000.0
 
-    # 6) Antwortschema, wie Frontend es nutzt:
-    #    App.jsx erwartet { "items": [...] }
-    return {"items": enriched_items,    # erkannte Objekte
-            "image_id": image_id,       # eindeutige ID für das Bild
-            "sha256": sha256,           # SHA256-Hash des Bildes
-            "storage": "temp"           # Speicherort des Bildes (Info für Debugging)
-           }
+    # === (5) GESAMTZEIT ===
+    t_total_ms = (time.perf_counter() - t_total0) * 1000.0
 
+    # === (6) Antwortschema (Frontend-kompatibel) + Timings ===
+    return {
+        "items": enriched_items,            # erkannte Objekte
+        "image_id": image_id,               # eindeutige ID
+        "sha256": sha256,                   # Hash des Bildes
+        "storage": "temp",                  # Speicherort (Debug-Info)
+        # ---- Timing-Breakdown (gerundet auf 3 NK) ----
+        "t_total_ms": round(t_total_ms, 3),
+        "t_pre_ms": round(t_pre_ms, 3),
+        "t_infer_ms": round(t_infer_ms, 3),
+        "t_post_ms": round(t_post_ms, 3),
+        "t_openfoodfacts_ms": round(t_openfoodfacts_ms, 3),
+    }
 
 # ------------------------------------------------------------
 # /feedback

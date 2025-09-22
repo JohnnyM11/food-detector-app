@@ -101,7 +101,7 @@ def get_nutrition_for_food(query: str) -> dict | None:
             "fields": "product_name,lang,nutriments,categories_tags"  # nur relevante Felder
         }
         try:
-            r = requests.get(OFF_SEARCH_URL, params=params, headers=HEADERS, timeout=OFF_TIMEOUT) # 8s total
+            r = requests.get(OFF_SEARCH_URL, params=params, headers=HEADERS, timeout=OFF_TIMEOUT) # alternativ: timeout=8 (sec total)
             r.raise_for_status()
             data = r.json()
         except Exception:
